@@ -1,0 +1,4 @@
+#!/bin/bash
+
+echo '[+] Starting server'
+FLASK_DEBUG=1 FLASK_ENV=development flask run
