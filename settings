@@ -1,4 +1,0 @@
-#!/bin/bash
-
-export FLASK_APP=main.py
-echo 'environment variable created'
