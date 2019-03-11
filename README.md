@@ -14,7 +14,8 @@ Maybe more features will be added.
 # Usage
 
 1. Fork this project (master branch)
-2. Give the necessary permissions to the start.sh file and run it
+2. Install the dependencies in requirements.txt file
+3. Give the necessary permissions to the start.sh file and run it
 
 # Contribution
 
