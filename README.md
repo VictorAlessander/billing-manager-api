@@ -11,6 +11,11 @@ A project made for fun and control of monthly expenses.
 
 Maybe more features will be added.
 
+# Usage
+
+1. Fork this project (master branch)
+2. Give the necessary permissions to the start.sh file and run it
+
 # Contribution
 
 Pull requests are welcome. Feel free to contribute.
