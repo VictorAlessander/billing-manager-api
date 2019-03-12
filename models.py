@@ -8,6 +8,7 @@ class User(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   username = db.Column(db.String(120), unique=True, nullable=False)
   password = db.Column(db.String(120), nullable=False)
+  debits = db.relationship('Debit', backref='user', lazy=True)
 
   def save(self):
     db.session.add(self)
@@ -62,3 +63,33 @@ class RevokedTokenUser(db.Model):
   def is_jti_blacklisted(cls, jti):
     query = cls.query.filter_by(jti=jti).first()
     return bool(query)
+
+
+class Category(db.Model):
+
+  __tablename__ = 'categories'
+
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.String(100), nullable=False)
+  debits = db.relationship('Debit', backref='category', lazy=True)
+
+  @classmethod
+  def return_all_categories(cls):
+    def to_json(arg):
+      return {
+        'id': arg.id,
+        'name': arg.name
+      }
+    
+    return {'categories': list(map(lambda x: to_json(x), Category.query.all()))}
+
+
+class Debit(db.Model):
+
+  __tablename__ = 'debits'
+
+  id = db.Column(db.Integer, primary_key=True)
+  cost = db.Column(db.Float, nullable=False)
+  name = db.Column(db.String(100), nullable=False)
+  category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
+  user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)

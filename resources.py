@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from models import RevokedTokenUser, User
+from models import RevokedTokenUser, User, Category
 from flask_jwt_extended import (
   create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt
   )
@@ -112,3 +112,7 @@ class SecretResource(Resource):
     return {
       'answer': 42
     }
+
+class CategoryResource(Resource):
+  def get(self):
+    return Category.return_all_categories()

@@ -30,6 +30,7 @@ api.add_resource(resources.UserLogoutRefresh, '/logout/refresh')
 api.add_resource(resources.TokenRefresh, '/token/refresh')
 api.add_resource(resources.AllUsers, '/users')
 api.add_resource(resources.SecretResource, '/secret')
+api.add_resource(resources.CategoryResource, '/categories')
 
 @jwt.token_in_blacklist_loader
 def check_if_token_in_blacklist(decrypted_token):
