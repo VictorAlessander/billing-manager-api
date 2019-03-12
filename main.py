@@ -5,6 +5,12 @@ from db.config import configure
 from flask_jwt_extended import JWTManager
 
 app = Flask(__name__)
+
+app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
+app.config['JWT_BLACKLIST_ENABLED'] = True
+app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
+
+jwt = JWTManager(app)
 api = Api(app)
 setup_database = configure(app)
 db = SQLAlchemy(setup_database)
@@ -13,7 +19,8 @@ db = SQLAlchemy(setup_database)
 def create_tables():
   db.create_all()
 
-import models, resources
+import models
+import resources
 
 api.add_resource(resources.Index, '/')
 api.add_resource(resources.UserRegistration, '/registration')
@@ -23,3 +30,8 @@ api.add_resource(resources.UserLogoutRefresh, '/logout/refresh')
 api.add_resource(resources.TokenRefresh, '/token/refresh')
 api.add_resource(resources.AllUsers, '/users')
 api.add_resource(resources.SecretResource, '/secret')
+
+@jwt.token_in_blacklist_loader
+def check_if_token_in_blacklist(decrypted_token):
+    jti = decrypted_token['jti']
+    return models.RevokedTokenUser.is_jti_blacklisted(jti)
