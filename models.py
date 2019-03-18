@@ -73,6 +73,10 @@ class Category(db.Model):
   name = db.Column(db.String(100), nullable=False)
   debits = db.relationship('Debit', backref='category', lazy=True)
 
+  def save(self):
+    db.session.add(self)
+    db.session.commit()
+
   @classmethod
   def return_all_categories(cls):
     def to_json(arg):
@@ -80,7 +84,7 @@ class Category(db.Model):
         'id': arg.id,
         'name': arg.name
       }
-    
+
     return {'categories': list(map(lambda x: to_json(x), Category.query.all()))}
 
 
@@ -89,7 +93,21 @@ class Debit(db.Model):
   __tablename__ = 'debits'
 
   id = db.Column(db.Integer, primary_key=True)
+  debit_name = db.Column(db.String(100), nullable=False)
   cost = db.Column(db.Float, nullable=False)
-  name = db.Column(db.String(100), nullable=False)
   category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+  @classmethod
+  def find_debits_by_user(cls, username):
+    def to_json(arg):
+      return {
+        "id": arg.id,
+        "debit_name": arg.debit_name,
+        "cost": arg.cost,
+        "category_id": arg.category_id,
+        "user_id": arg.user_id
+      }
+
+    return {'debits': list(map(
+      lambda x: to_json(x), Debit.query.filter_by(user_id=username.id)))}
