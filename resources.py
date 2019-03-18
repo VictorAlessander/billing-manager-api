@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse
-from models import RevokedTokenUser, User, Category
+from models import RevokedTokenUser, User, Category, Debit
 from flask_jwt_extended import (
   create_access_token, create_refresh_token, jwt_required, jwt_refresh_token_required, get_jwt_identity, get_raw_jwt
   )
@@ -13,8 +13,15 @@ class Index(Resource):
 
 
 class UserRegistration(Resource):
+
+  def __init__(self):
+    self.parser = reqparse.RequestParser()
+
+    self.parser.add_argument('username', help='Username name cannot be blank', required=True)
+    self.parser.add_argument('password', help='Password name cannot be blank', required=True)
+
   def post(self):
-    data = parser.parse_args()
+    data = self.parser.parse_args()
 
     new_user = User(
       username=data['username'],
@@ -38,8 +45,15 @@ class UserRegistration(Resource):
 
 
 class UserLogin(Resource):
+
+  def __init__(self):
+    self.parser = reqparse.RequestParser()
+
+    self.parser.add_argument('username', help='Username name cannot be blank', required=True)
+    self.parser.add_argument('password', help='Password name cannot be blank', required=True)
+
   def post(self):
-    data = parser.parse_args()
+    data = self.parser.parse_args()
 
     user = User.find_by_username(data['username'])
 
@@ -142,15 +156,26 @@ class DebitResource(Resource):
   def __init__(self):
     self.parser = reqparse.RequestParser()
 
+    # self.parser.add_argument(
+    #   'debit_name', help='Debit name cannot be blank', required=True
+    # )
+    # self.parser.add_argument(
+    #   'cost', help='Cost cannot be blank', required=True
+    # )
+    # self.parser.add_argument(
+    #   'category_id', help='Category id cannot be blank', required=True
+    # )
     self.parser.add_argument(
-      'debit_name', help='Debit name cannot be blank', required=True
+      'user', help='User id cannot be blank', required=True
     )
-    self.parser.add_argument(
-      'cost', help='Cost cannot be blank', required=True
-    )
-    self.parser.add_argument(
-      'category_id', help='Category id cannot be blank', required=True
-    )
-    self.parser.add_argument(
-      'user_id', help='User id cannot be blank', required=True
-    )
+
+  def get(self):
+    data = self.parser.parse_args()
+
+    try:
+      debits = Debit.find_debits_by_user(int(data['user']))
+
+      return debits
+    except Exception as err:
+      print(err)
+      return {'message': 'Something went wrong'}

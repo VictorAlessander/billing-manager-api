@@ -30,6 +30,7 @@ class User(db.Model):
   def return_all_users(cls):
     def to_json(arg):
       return {
+        'id': arg.id,
         'username': arg.username,
         'password': arg.password
       }
@@ -99,7 +100,7 @@ class Debit(db.Model):
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
   @classmethod
-  def find_debits_by_user(cls, username):
+  def find_debits_by_user(cls, user_id):
     def to_json(arg):
       return {
         "id": arg.id,
@@ -110,4 +111,8 @@ class Debit(db.Model):
       }
 
     return {'debits': list(map(
-      lambda x: to_json(x), Debit.query.filter_by(user_id=username.id)))}
+      lambda x: to_json(x), Debit.query.filter_by(user_id=user_id)))}
+
+  def save(self):
+    db.session.add(self)
+    db.session.commit()
