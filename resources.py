@@ -165,17 +165,49 @@ class DebitResource(Resource):
     # self.parser.add_argument(
     #   'category_id', help='Category id cannot be blank', required=True
     # )
+
+  def get(self):
     self.parser.add_argument(
       'user', help='User id cannot be blank', required=True
     )
 
-  def get(self):
     data = self.parser.parse_args()
 
     try:
       debits = Debit.find_debits_by_user(int(data['user']))
 
       return debits
+    except Exception as err:
+      print(err)
+      return {'message': 'Something went wrong'}
+
+  def post(self):
+    self.parser.add_argument(
+      'debit_name', help='Debit name cannot be blank', required=True
+    )
+    self.parser.add_argument(
+      'cost', help='Cost cannot be blank', required=True
+    )
+    self.parser.add_argument(
+      'category_id', help='Category id cannot be blank', required=True
+    )
+    self.parser.add_argument(
+      'user_id', help='User id cannot be blank', required=True
+    )
+
+    data = self.parser.parse_args()
+
+    try:
+      debit = Debit(
+        debit_name=data['debit_name'],
+        cost=data['cost'],
+        category_id=data['category_id'],
+        user_id=data['user_id']
+      )
+
+      debit.save()
+
+      return {'message': 'Debit was successfully saved'}
     except Exception as err:
       print(err)
       return {'message': 'Something went wrong'}
