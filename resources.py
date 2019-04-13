@@ -17,8 +17,18 @@ class UserRegistration(Resource):
   def __init__(self):
     self.parser = reqparse.RequestParser()
 
-    self.parser.add_argument('username', help='Username name cannot be blank', required=True)
-    self.parser.add_argument('password', help='Password name cannot be blank', required=True)
+    self.parser.add_argument(
+      'username',
+      help='Username name cannot be blank',
+      required=True,
+      location='json'
+    )
+    self.parser.add_argument(
+      'password',
+      help='Password name cannot be blank',
+      required=True,
+      location='json'
+    )
 
   def post(self):
     data = self.parser.parse_args()
@@ -49,8 +59,18 @@ class UserLogin(Resource):
   def __init__(self):
     self.parser = reqparse.RequestParser()
 
-    self.parser.add_argument('username', help='Username name cannot be blank', required=True)
-    self.parser.add_argument('password', help='Password name cannot be blank', required=True)
+    self.parser.add_argument(
+      'username',
+      help='Username name cannot be blank',
+      required=True,
+      location="json"
+    )
+    self.parser.add_argument(
+      'password',
+      help='Password name cannot be blank',
+      required=True,
+      location="json"
+    )
 
   def post(self):
     data = self.parser.parse_args()
@@ -131,7 +151,12 @@ class CategoryResource(Resource):
   def __init__(self):
     self.parser = reqparse.RequestParser()
 
-    self.parser.add_argument('name', help='Name cannot be blank', required=True)
+    self.parser.add_argument(
+      'name',
+      help='Name cannot be blank',
+      required=True,
+      location="json"
+    )
 
   def get(self):
     return Category.return_all_categories()
@@ -183,16 +208,28 @@ class DebitResource(Resource):
 
   def post(self):
     self.parser.add_argument(
-      'debit_name', help='Debit name cannot be blank', required=True
+      'debit_name',
+      help='Debit name cannot be blank',
+      required=True,
+      location="json"
     )
     self.parser.add_argument(
-      'cost', help='Cost cannot be blank', required=True
+      'cost',
+      help='Cost cannot be blank',
+      required=True,
+      location="json"
     )
     self.parser.add_argument(
-      'category_id', help='Category id cannot be blank', required=True
+      'category_id',
+      help='Category id cannot be blank',
+      required=True,
+      location="json"
     )
     self.parser.add_argument(
-      'user_id', help='User id cannot be blank', required=True
+      'user_id',
+      help='User id cannot be blank',
+      required=True,
+      location="json"
     )
 
     data = self.parser.parse_args()

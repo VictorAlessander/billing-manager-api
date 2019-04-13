@@ -3,8 +3,10 @@ from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from db.config import configure
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
 app.config['JWT_BLACKLIST_ENABLED'] = True
